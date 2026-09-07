@@ -15,16 +15,20 @@ pytest/httpx + Docker Compose (app + worker + Redis).
 
 ## Acceptance criteria
 
-- [ ] Upload endpoint enqueues a background job (arq worker, Redis-backed)
-- [ ] Job status is pollable (pending/running/done/failed) with idempotent enqueue
-- [ ] Completion triggers a webhook callback
-- [ ] Long-running work handled without blocking the API (queues, not threads)
+- [x] Upload endpoint enqueues a background job (arq worker, Redis-backed)
+- [x] Job status is pollable (pending/running/done/failed) with idempotent enqueue
+- [x] Completion triggers a webhook callback
+- [x] Long-running work handled without blocking the API (queues, not threads)
 - [ ] Ship gate passes (`/ship`)
 
 ## Project-specific notes
 
-- **Needs Redis.** Local dev: `docker compose up -d` (once the compose file exists) starts
-  Redis + worker alongside the API. Verified this session: Docker Desktop running, a throwaway
-  `redis:7-alpine` container responded to `PING` — no separate Redis install needed.
-- Idempotency and retry behavior are the design core here (see CATALOG.md "Proves" column) —
-  don't let the happy path be the only tested path.
+- **Needs Redis.** `docker compose up --build` starts Redis + API + worker together —
+  verified end-to-end for real (built images, hit `/jobs` over HTTP, watched
+  pending→running→done, confirmed webhook retry-then-`failed` against an unreachable port).
+- Idempotency key: client-supplied `Idempotency-Key` header, claimed via Redis `SET NX`.
+  Webhook retry: bounded exponential backoff (5 attempts, 1s base), then `failed` — never
+  retried forever. Both are the design core here; see README §4 for the reasoning.
+- Real bug worth remembering: `httpx` must be a runtime dependency (the worker's own
+  `webhooks.py` imports it), not dev-only — a dev-only placement passes `pytest` locally but
+  crashes the Docker Compose `worker` service, which installs with `--no-dev`. See NOTES.md.
