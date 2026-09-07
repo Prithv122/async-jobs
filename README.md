@@ -77,7 +77,7 @@ this output.
 | Webhook delivery (receiver up) | Delivered on first attempt, signature verified | — | Verified against a real local HTTP server, not a mock (`scripts/demo.py` §4). |
 | Webhook delivery (receiver unreachable) | 5 attempts, exponential backoff, ~17s total, then `webhook_status: failed` | — | Verified through the actual Docker Compose stack against a real closed port, not simulated — see `NOTES.md`. |
 
-**Test suite:** 32 tests, **100% statement coverage**, run against a real Redis (no mocked
+**Test suite:** 31 tests, **100% statement coverage**, run against a real Redis (no mocked
 datastore) — CI provisions a Redis 7 service container for the same reason.
 
 ## 6. How to run

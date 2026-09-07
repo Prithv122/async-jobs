@@ -13,7 +13,7 @@ Form: **action → technical specifics → measured outcome.** Numbers or it doe
   NX`) proven race-safe under 10 concurrent requests for the same key, plus HMAC-signed
   webhook delivery with bounded exponential-backoff retries (5 attempts, then a pollable
   `failed` state instead of retrying forever).
-- Reached 100% statement coverage across 32 tests exercising the queue, idempotency, and
+- Reached 100% statement coverage across 31 tests exercising the queue, idempotency, and
   webhook-retry logic against a real Redis in CI (service container), catching a real
   Docker-only bug (a runtime dependency misplaced in the dev-only group) that the local
   test suite alone never surfaced.
