@@ -1,0 +1,35 @@
+# One command starts the full architecture: API, worker, and Redis.
+services:
+  redis:
+    image: redis:7-alpine
+    container_name: async-jobs-redis
+    ports:
+      - "6379:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  api:
+    build: .
+    container_name: async-jobs-api
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      WEBHOOK_SECRET: ${WEBHOOK_SECRET:-change-me}
+    ports:
+      - "8000:8000"
+    depends_on:
+      redis:
+        condition: service_healthy
+
+  worker:
+    build: .
+    container_name: async-jobs-worker
+    command: arq asyncjobs.worker.WorkerSettings
+    environment:
+      REDIS_URL: redis://redis:6379/0
+      WEBHOOK_SECRET: ${WEBHOOK_SECRET:-change-me}
+    depends_on:
+      redis:
+        condition: service_healthy

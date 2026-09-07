@@ -53,6 +53,7 @@ source = { editable = "." }
 dependencies = [
     { name = "arq" },
     { name = "fastapi" },
+    { name = "httpx" },
     { name = "pydantic-settings" },
     { name = "python-multipart" },
     { name = "uvicorn", extra = ["standard"] },
@@ -60,7 +61,6 @@ dependencies = [
 
 [package.dev-dependencies]
 dev = [
-    { name = "httpx" },
     { name = "pytest" },
     { name = "pytest-asyncio" },
     { name = "pytest-cov" },
@@ -71,6 +71,7 @@ dev = [
 requires-dist = [
     { name = "arq", specifier = ">=0.26" },
     { name = "fastapi", specifier = ">=0.115" },
+    { name = "httpx", specifier = ">=0.27" },
     { name = "pydantic-settings", specifier = ">=2.6" },
     { name = "python-multipart", specifier = ">=0.0.9" },
     { name = "uvicorn", extras = ["standard"], specifier = ">=0.32" },
@@ -78,7 +79,6 @@ requires-dist = [
 
 [package.metadata.requires-dev]
 dev = [
-    { name = "httpx", specifier = ">=0.27" },
     { name = "pytest", specifier = ">=8.3" },
     { name = "pytest-asyncio", specifier = ">=0.24" },
     { name = "pytest-cov", specifier = ">=6.0" },

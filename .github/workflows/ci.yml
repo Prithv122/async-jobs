@@ -9,6 +9,26 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
+
+    # The suite runs against a real Redis, not a mock: idempotency (SET NX) and job-state
+    # hashes are the subject of this project, and there is no substitute for the real thing.
+    services:
+      redis:
+        image: redis:7-alpine
+        ports:
+          - 6379:6379
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+
+    env:
+      REDIS_URL: redis://localhost:6379/15
+      SIMULATED_WORK_SECONDS: "0.05"
+      WEBHOOK_BACKOFF_BASE_SECONDS: "0.01"
+      WEBHOOK_SECRET: ci-test-secret
+
     steps:
       - uses: actions/checkout@v4
 
