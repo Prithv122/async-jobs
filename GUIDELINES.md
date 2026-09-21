@@ -19,7 +19,7 @@ pytest/httpx + Docker Compose (app + worker + Redis).
 - [x] Job status is pollable (pending/running/done/failed) with idempotent enqueue
 - [x] Completion triggers a webhook callback
 - [x] Long-running work handled without blocking the API (queues, not threads)
-- [x] Ship gate passes (`/ship`)
+- [x] Ship gate passes
 
 ## Project-specific notes
 
